@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BankLibrary
 //Файл программы содержащий делегат и вспомогательный метод
 {
-    public delegate void AccountStateHandler(object sender);
+    public delegate void AccountStateHandler(object sender, AccountEventArgs e);
 
     public class AccountEventArgs //Класс содержащий аргументы (наполнение) для СОБЫТИЙ(event)
         {
