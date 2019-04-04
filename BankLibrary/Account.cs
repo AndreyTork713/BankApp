@@ -74,7 +74,7 @@ namespace BankLibrary
         public void Put(decimal sum)
         {
             _sum += sum;
-            OnAdded(new AccountEventArgs($"На счет поступило: {sum}", sum));
+            OnAdded(new AccountEventArgs($"На счет  {_id} поступило: {sum}", sum));
             
         }
 
@@ -83,9 +83,39 @@ namespace BankLibrary
             decimal result = 0;
             if (_sum > sum)
             {
-                OnWithdrawed(new AccountEventArgs($"Со счета снято: {sum}", sum));
+                _sum -= sum;
+                result = sum;
+                OnWithdrawed(new AccountEventArgs($"Со счета {_id} снято: {sum}", sum));
+            }
+            else
+            {
+                OnWithdrawed(new AccountEventArgs($"На счете {_id}...", 0));
             }
             return result;
+        }
+
+        //Открытие счета
+        protected virtual void Open()
+        {
+            OnOpen(new AccountEventArgs($"Открыт новый счет! ID счета: {this._id}. На счете: {this._sum}",_sum));
+        }
+        //Закрытие счета
+        protected virtual void Close()
+        {
+            OnClosed(new AccountEventArgs($"Счет {_id} закрыт! Итоговая сумма на счете {CurrentSum}",CurrentSum));
+        }
+        protected internal void IncrementDays()
+        {
+            _days++;
+        }
+        //Начисление процентов
+        protected internal virtual void Calculate()
+        {
+
+            decimal increment = _sum * _percentage / 100;
+            _sum = _sum + increment;
+            OnCalculated(new AccountEventArgs($"Начислены проценты в размере {increment}",increment));
+                
         }
     }
 }
